@@ -37,7 +37,8 @@ const defaultOptions = {
   // cache: myCache
 
   // Override the way the Authorization header is set
-  // getAuth: (tokenName) => ...
+  // Use cookies
+  getAuth: (tokenName) => undefined
 
   // Additional ApolloClient options
   // apollo: { ... }
