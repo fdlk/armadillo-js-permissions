@@ -2,12 +2,14 @@
   <div class="application" v-if="application">
     <h1>{{ application.name }}</h1>
     <code>{{ application.id }}</code>
-    <h2>Roles</h2>
-    <ul>
-      <li v-for="role in application.roles" :key="role.id">
-        <span :class="{super: role.isSuperRole, default: role.isDefault}">{{role.name}}</span>
-      </li>
-    </ul>
+    <div v-if="application.roles">
+      <h2>Roles</h2>
+      <ul>
+        <li v-for="role in application.roles" :key="role.id">
+          <span :class="{super: role.isSuperRole, default: role.isDefault}">{{role.name}}</span>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -20,12 +22,6 @@ export default {
       application {
         id
         name
-        roles {
-          id
-          name
-          isSuperRole
-          isDefault
-        }
       }
     }`
   }

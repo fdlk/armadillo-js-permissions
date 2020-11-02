@@ -45,6 +45,18 @@
 import gql from 'graphql-tag'
 import Application from './components/Application'
 
+const REGISTERED_USERS_QUERY = gql`query {
+    registeredUsers {
+      id
+      email
+      name
+      firstName
+      lastName
+      registered
+      roles
+    }
+  }`
+
 export default {
   name: 'app',
   components: {
@@ -59,12 +71,20 @@ export default {
         mutation: gql`mutation ($userId: String!) {
           register(userId: $userId) {
             id
+            email
+            name
+            firstName
+            lastName
             roles
             registered
           }
         }`,
         variables: {
           userId
+        },
+        update: (store, { data: { register } }) => {
+          const users = store.readQuery({ query: REGISTERED_USERS_QUERY }).registeredUsers
+          store.writeQuery({ query: REGISTERED_USERS_QUERY, data: { registeredUsers: [...users, register] } })
         }
       })
     },
@@ -79,6 +99,13 @@ export default {
         }`,
         variables: {
           userId
+        },
+        update: (store) => {
+          const users = store.readQuery({ query: REGISTERED_USERS_QUERY }).registeredUsers
+          store.writeQuery({
+            query: REGISTERED_USERS_QUERY,
+            data: { registeredUsers: users.filter(it => it.id !== userId) }
+          })
         }
       })
     }
@@ -107,17 +134,7 @@ export default {
         }
       }
     },
-    registeredUsers: gql`query {
-      registeredUsers {
-        id
-        email
-        name
-        firstName
-        lastName
-        registered
-        roles
-      }
-    }`
+    registeredUsers: REGISTERED_USERS_QUERY
   }
 }
 </script>
